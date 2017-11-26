@@ -4,4 +4,5 @@ A script used to automatically download freshly created Pastebin pasties
 
 ### Requirements
 
-python celery
+celery for python
+redis as broker for celery
