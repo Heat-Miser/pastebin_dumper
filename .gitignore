@@ -58,3 +58,8 @@ target/
 
 # Database
 *.sqlite3
+
+#special
+.DS_Store
+celerybeat-schedule
+
