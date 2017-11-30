@@ -17,3 +17,6 @@ class Pastie(models.Model):
 
 	def __str__(self): 
 		return self.key
+
+	class Meta:
+		ordering = ["date"]

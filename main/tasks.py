@@ -14,9 +14,9 @@ import tempfile
 import shutil
 import re
 
-celery_app.conf.beat_schedule['update-every-three-seconds'] = {
+celery_app.conf.beat_schedule['update-every-two-seconds'] = {
     'task': 'main.tasks.list_new_pasties',
-    'schedule': timedelta(seconds=3),
+    'schedule': timedelta(seconds=2),
     'args': (),
 }
 
@@ -70,6 +70,7 @@ def downloading_new_pasties(url, key, output):
 
 @celery_app.task
 def generate_proxies_list():
+	print "# Generating new proxies list"
 	output_file = settings.PROXIES_LIST
 	ip_regex = re.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]{1,5}")
 	try:
@@ -78,6 +79,7 @@ def generate_proxies_list():
 
 		with open(filename, 'r') as proxies_list:
 			with tempfile.NamedTemporaryFile() as temp:
+				counter = 0
 				for line in proxies_list:
 					for match in re.finditer(REGEX, line):
 						proxy = {'http': match.group()}
@@ -86,10 +88,12 @@ def generate_proxies_list():
 							ip = match.group().split(":")[0]
 							if ip == r.text.strip():
 								temp.write("%s\n" % (match.group()))
+								counter += 1
 						except:
 							pass
 				temp.flush()
-				shutil.copyfile(temp.name, output_file)
+				if counter > 0:
+					shutil.copyfile(temp.name, output_file)
 	except Exception as e:
 		print "ERROR: unable to get proxies list"
 		print e.message, e.args

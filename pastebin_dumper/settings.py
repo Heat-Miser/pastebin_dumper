@@ -118,19 +118,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
 
 # Pasties dumper config
 STORAGE_DIR = "storage"
 
+# Path of the proxies list
 PROXIES_LIST = "/tmp/proxies_list"
 
-# Broker configuration
+# Redis configuration used by Celery
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_DB = 0
 
-# Pastebin urls
+# Pastebin scraping url
 SCRAPING_URL = "https://pastebin.com/api_scraping.php?limit=100"
-SCRAPE_ITEM_URL = "https://pastebin.com/api_scrape_item.php?i=%s"
