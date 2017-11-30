@@ -1,0 +1,11 @@
+[Unit]
+Description=Pastebin dumper beat scheduler
+
+[Service]
+Type=simple
+User=www-data
+Environment=DJANGO_SETTINGS_MODULE=pastebin_dumper.settings
+ExecStart=/bin/bash -c "cd /var/www/pastebin_dumper/; celery -A pastebin_dumper beat"
+
+[Install]
+WantedBy=multi-user.target
