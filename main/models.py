@@ -14,3 +14,6 @@ class Pastie(models.Model):
 	title = models.CharField(max_length=255, blank=True)
 	syntax = models.CharField(max_length=50)
 	user = models.CharField(max_length=255, blank=True)
+
+	def __str__(self): 
+		return self.key

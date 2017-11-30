@@ -1,37 +1,23 @@
-import django
-from django.conf import settings
-
-django.setup()
+from __future__ import absolute_import, unicode_literals
 
 from main.models import Pastie
 
 from datetime import datetime, timedelta
-
-from celery import Celery
+from pastebin_dumper.celery import app as celery_app
+from django.conf import settings
 import json
 import requests
 import codecs
 import os
 import time
-import pytz
 
-celeryapp = Celery(
-    'pastebin_dumper',
-    broker='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT,
-        settings.REDIS_DB),
-    backend='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT,
-        settings.REDIS_DB)
-    )
-
-
-celeryapp.conf.beat_schedule['update-every-three-seconds'] = {
+celery_app.conf.beat_schedule['update-every-three-seconds'] = {
     'task': 'main.tasks.list_new_pasties',
     'schedule': timedelta(seconds=3),
     'args': (),
 }
 
-
-@celeryapp.task
+@celery_app.task
 def list_new_pasties():
 	print "# Getting new pasties"
 	
@@ -55,15 +41,21 @@ def list_new_pasties():
 				filename = "%s/%s" % (settings.STORAGE_DIR, pastie["key"])
 				downloading_new_pasties.delay(pastie["scrape_url"], pastie["key"], filename)
 	except Exception as e:
+		print "ERROR: unable to get new pasties"
 		print e.message, e.args
 		pass
 			
 
-@celeryapp.task
+@celery_app.task
 def downloading_new_pasties(url, key, output):
 	print "# Downloading new pastie %s" % (key)
-	res = requests.get(url)
-	f = codecs.open(output, "w", encoding='utf8')
-	f.write(res.text)
-	f.close()
+	try:
+		res = requests.get(url)
+		f = codecs.open(output, "w", encoding='utf8')
+		f.write(res.text)
+		f.close()
+	except Exception as e:
+		print "ERROR: unable to download %s pastie" % (key)
+		print e.message, e.args
+		pass
 

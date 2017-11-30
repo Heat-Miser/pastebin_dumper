@@ -1,0 +1,59 @@
+{% extends 'bootstrap4/bootstrap4.html' %}
+
+{# Load the tag library #}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load static %}
+
+{% block bootstrap4_extra_head %}
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Pastebin Dumper">
+    <meta name="author" content="Heat Miser">
+	<link href="{% static 'narrow-jumbotron.css' %}"  rel="stylesheet">
+	<title>Pastebin Dumper</title>
+{% endblock %}
+
+{% block bootstrap4_content %}
+
+<div class="container">
+      <header class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+	      	<li class="nav-item">
+            	<a class="nav-link" href="mailto:webmaster@heat-miser.net">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Pastebin dumper</h3>
+      </header>
+
+      <main role="main">
+
+        <div class="jumbotron">
+          <h3 class="display-4">Get pastie</h3>
+          <form method="POST" method="POST" action="{% url 'index' %}">
+          	  {% csrf_token %}
+			  <div class="form-group">
+			    <input type="text" class="form-control" name="key" id="pastekey" placeholder="Enter pastie's id">
+			  </div>
+			  <div class="form-group">
+			  	<input type="submit" class="btn btn-lg btn-success" value="Download" role="button"/>
+			  </div>
+      	</form>
+      	{% if not_avaible %}
+	      	<div class="alert alert-danger" role="alert">
+			  Unfortunately this pastie is not available !
+			</div>
+		{% endif %}
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <p>&copy; Heat-Miser 2017</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+{% endblock %}
