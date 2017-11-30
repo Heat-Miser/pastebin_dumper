@@ -81,7 +81,7 @@ def generate_proxies_list():
 			with tempfile.NamedTemporaryFile() as temp:
 				counter = 0
 				for line in proxies_list:
-					for match in re.finditer(REGEX, line):
+					for match in re.finditer(ip_regex, line):
 						proxy = {'http': match.group()}
 						try:
 							r = requests.get("http://ifconfig.co/ip", proxies=proxy, timeout=1)
