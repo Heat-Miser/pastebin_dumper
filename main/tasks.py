@@ -75,7 +75,7 @@ def generate_proxies_list():
 	ip_regex = re.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]{1,5}")
 	try:
 		pastie = Pastie.objects.filter(user="spys1").latest("date")
-		filepath = "%s%s%s" % (settings.STORAGE_DIR, os.path.sep, pastie.key)
+		filename = "%s%s%s" % (settings.STORAGE_DIR, os.path.sep, pastie.key)
 
 		with open(filename, 'r') as proxies_list:
 			with tempfile.NamedTemporaryFile() as temp:
