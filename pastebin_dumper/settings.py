@@ -124,6 +124,8 @@ STATIC_URL = '/static/'
 # Pasties dumper config
 STORAGE_DIR = "storage"
 
+PROXIES_LIST = "/tmp/proxies_list"
+
 # Broker configuration
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379

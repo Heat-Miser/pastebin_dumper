@@ -10,10 +10,19 @@ import requests
 import codecs
 import os
 import time
+import tempfile
+import shutil
+import re
 
 celery_app.conf.beat_schedule['update-every-three-seconds'] = {
     'task': 'main.tasks.list_new_pasties',
     'schedule': timedelta(seconds=3),
+    'args': (),
+}
+
+celery_app.conf.beat_schedule['update-every-thirty-minutes'] = {
+    'task': 'main.tasks.generate_proxies_list',
+    'schedule': timedelta(minutes=30),
     'args': (),
 }
 
@@ -59,3 +68,29 @@ def downloading_new_pasties(url, key, output):
 		print e.message, e.args
 		pass
 
+@celery_app.task
+def generate_proxies_list():
+	output_file = settings.PROXIES_LIST
+	ip_regex = re.compile("(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]{1,5}")
+	try:
+		pastie = Pastie.objects.filter(user="spys1").latest("date")
+		filepath = "%s%s%s" % (settings.STORAGE_DIR, os.path.sep, pastie.key)
+
+		with open(filename, 'r') as proxies_list:
+			with tempfile.NamedTemporaryFile() as temp:
+				for line in proxies_list:
+					for match in re.finditer(REGEX, line):
+						proxy = {'http': match.group()}
+						try:
+							r = requests.get("http://ifconfig.co/ip", proxies=proxy, timeout=1)
+							ip = match.group().split(":")[0]
+							if ip == r.text.strip():
+								temp.write("%s\n" % (match.group()))
+						except:
+							pass
+				temp.flush()
+				shutil.copyfile(temp.name, output_file)
+	except Exception as e:
+		print "ERROR: unable to get proxies list"
+		print e.message, e.args
+		pass
