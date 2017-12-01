@@ -13,7 +13,8 @@ import os
 def index(request):
 	pattern = re.compile("^[a-zA-Z0-9]{8,16}$")
 	if request.method == "GET":
-		return render(request, "index.html",{}, RequestContext(request))
+		number = Pastie.objects.count()
+		return render(request, "index.html",{"count": number}, RequestContext(request))
 	elif request.method == "POST":
 		key = request.POST["key"]
 		if pattern.match(key):

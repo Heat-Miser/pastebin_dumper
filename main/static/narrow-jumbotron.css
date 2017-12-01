@@ -56,6 +56,12 @@ body {
   margin-bottom: 2rem;
 }
 
+.jumbotron .info {
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+
 .header {
   margin-bottom: 2rem;
 }
