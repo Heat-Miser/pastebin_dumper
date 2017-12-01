@@ -14,9 +14,9 @@ import tempfile
 import shutil
 import re
 
-celery_app.conf.beat_schedule['update-every-two-seconds'] = {
+celery_app.conf.beat_schedule['update-every-three-seconds'] = {
     'task': 'main.tasks.list_new_pasties',
-    'schedule': timedelta(seconds=2),
+    'schedule': timedelta(seconds=3),
     'args': (),
 }
 
@@ -41,10 +41,7 @@ def list_new_pasties():
 			if Pastie.objects.filter(key=pastie["key"]).count() == 0:
 				date = time.strftime('%Y-%m-%d %H:%M:%S+00:00', time.localtime(int(pastie["date"])))
 				pastie["date"] = date
-				if pastie["date"] != "0":
-					expire = time.strftime('%Y-%m-%d %H:%M:%S+00:00', time.localtime(int(pastie["expire"])))
-				else:
-					expire = ""
+				expire = time.strftime('%Y-%m-%d %H:%M:%S+00:00', time.localtime(int(pastie["expire"])))
 				pastie["expire"] = expire
 				Pastie.objects.create(**pastie)
 				filename = "%s/%s" % (settings.STORAGE_DIR, pastie["key"])
