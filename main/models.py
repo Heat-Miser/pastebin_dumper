@@ -8,7 +8,7 @@ class Pastie(models.Model):
 	scrape_url = models.CharField(max_length=255)
 	full_url = models.CharField(max_length=255)
 	date = models.DateTimeField()
-	key = models.CharField(max_length=10)
+	key = models.CharField(max_length=10, db_index=True)
 	size = models.IntegerField()
 	expire = models.DateTimeField(blank=True)
 	title = models.CharField(max_length=255, blank=True)
