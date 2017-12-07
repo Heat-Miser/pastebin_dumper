@@ -12,8 +12,8 @@ import os
 
 def index(request):
 	pattern = re.compile("^[a-zA-Z0-9]{8,16}$")
+	number = Pastie.objects.count()
 	if request.method == "GET":
-		number = Pastie.objects.count()
 		return render(request, "index.html",{"count": number}, RequestContext(request))
 	elif request.method == "POST":
 		key = request.POST["key"]
@@ -27,8 +27,8 @@ def index(request):
 						response['Content-Disposition'] = 'inline; filename=' + os.path.basename(key)
 						return response
 				else:
-					return render(request, "index.html",{"not_avaible": True}, RequestContext(request))
+					return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
 			except:
-				return render(request, "index.html",{"not_avaible": True}, RequestContext(request))
+				return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
 		else:
-			return render(request, "index.html",{"not_avaible": True}, RequestContext(request))
+			return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
