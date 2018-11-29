@@ -11,24 +11,19 @@ import os
 
 
 def index(request):
-	pattern = re.compile("^[a-zA-Z0-9]{8,16}$")
-	number = Pastie.objects.count()
-	if request.method == "GET":
-		return render(request, "index.html",{"count": number}, RequestContext(request))
-	elif request.method == "POST":
-		key = request.POST["key"]
-		if pattern.match(key):
-			try:
-				paste = Pastie.objects.get(key=key)
-				path = "%s%s%s" % (settings.STORAGE_DIR, os.path.sep, key)
-				if os.path.exists(path):
-					with open(path, 'rb') as fh:
-						response = HttpResponse(fh.read(), content_type="application/force-download")
-						response['Content-Disposition'] = 'inline; filename=' + os.path.basename(key)
-						return response
-				else:
-					return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
-			except:
-				return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
-		else:
-			return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
+    pattern = re.compile("^[a-zA-Z0-9]{8,16}$")
+    number = Pastie.objects.count()
+    if request.method == "GET":
+        return render(request, "index.html",{"count": number}, RequestContext(request))
+    elif request.method == "POST":
+        key = request.POST["key"]
+        if pattern.match(key):
+            try:
+                paste = Pastie.objects.get(key=key)
+                response = HttpResponse(paste.content, content_type="application/force-download")
+                response['Content-Disposition'] = 'inline; filename=' + os.path.basename(key)
+                return response
+            except:
+                return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))
+        else:
+            return render(request, "index.html",{"not_avaible": True, "count": number}, RequestContext(request))

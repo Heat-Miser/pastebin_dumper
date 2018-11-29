@@ -76,8 +76,8 @@ WSGI_APPLICATION = 'pastebin_dumper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME': 'pastebin_dumper',
     }
 }
 
@@ -119,16 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 STATIC_URL = '/static/'
 
-# Pasties dumper config
-STORAGE_DIR = "storage"
-
-# Path of the proxies list
-PROXIES_LIST = "/tmp/proxies_list"
-
 # Redis configuration used by Celery
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_DB = 0
 
 # Pastebin scraping url
-SCRAPING_URL = "https://pastebin.com/api_scraping.php?limit=100"
+SCRAPING_URL = "https://scrape.pastebin.com/api_scraping.php?limit=100"

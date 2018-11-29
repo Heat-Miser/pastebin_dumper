@@ -1,5 +1,4 @@
 from __future__ import absolute_import, unicode_literals
-import os
 from celery import Celery
 from django.conf import settings
 
@@ -8,12 +7,8 @@ from django.conf import settings
 
 app = Celery(
     'pastebin_dumper',
-    broker='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT,
-        settings.REDIS_DB),
-    backend='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT,
-        settings.REDIS_DB)
-    )
+    broker='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB),
+    backend='redis://%s:%d/%d' % (settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB))
 
 
 app.autodiscover_tasks()
-
