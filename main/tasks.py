@@ -34,7 +34,7 @@ def list_new_pasties():
                 downloading_new_pasties.delay(pastie["scrape_url"], pastie["key"])
     except Exception as e:
         print("ERROR: unable to get new pasties")
-        print(e.message, e.args)
+        print(e.args)
 
 
 @celery_app.task
@@ -47,4 +47,4 @@ def downloading_new_pasties(url, key):
         new_p.save()
     except Exception as e:
         print(f"ERROR: unable to download {key} pastie")
-        print(e.message, e.args)
+        print(e.args)
