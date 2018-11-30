@@ -126,3 +126,4 @@ REDIS_DB = 0
 
 # Pastebin scraping url
 SCRAPING_URL = "https://scrape.pastebin.com/api_scraping.php?limit=100"
+SCRAPING_RAW_DATA_URL = "https://scrape.pastebin.com/api_scrape_item.php?i="

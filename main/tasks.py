@@ -31,20 +31,22 @@ def list_new_pasties():
                 expire = time.strftime('%Y-%m-%d %H:%M:%S+00:00', time.localtime(int(pastie["expire"])))
                 pastie["expire"] = expire
                 new_p = Pastie.objects.create(**pastie)
-                downloading_new_pasties.delay(pastie["scrape_url"], pastie["key"])
+                downloading_new_pasties.delay(pastie["key"])
     except Exception as e:
         print("ERROR: unable to get new pasties")
         print(e.args)
 
 
 @celery_app.task
-def downloading_new_pasties(url, key):
+def downloading_new_pasties(key):
     print(f"# Downloading new pastie {key}")
     try:
         new_p = Pastie.objects.get(key=key)
-        res = requests.get(url)
+        res = requests.get(settings.SCRAPING_RAW_DATA_URL + key)
         new_p.content = res.text
         new_p.save()
     except Exception as e:
         print(f"ERROR: unable to download {key} pastie")
         print(e.args)
+
+

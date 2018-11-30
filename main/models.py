@@ -16,9 +16,16 @@ class Pastie(models.Model):
     title = models.CharField(max_length=255, blank=True)
     syntax = models.CharField(max_length=50)
     user = models.CharField(max_length=255, blank=True)
+    keep = models.BooleanField(default=False)
 
     def __str__(self):
         return self.key
 
-    class Meta:
-        ordering = ["date"]
+
+class Pattern(models.Model):
+    regex = models.CharField(max_length=255)
+    comment = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.comment
+
